@@ -1,0 +1,84 @@
+;-----------------------------------
+;Start G-code
+;-----------------------------------
+
+; Script based on an original created by tjjfvi (https://github.com/tjjfvi)
+; An up-to-date version of the tjjfvi's original script can be found
+; here: https://csi.t6.fyi/
+; Note - This script will only work in Cura V4.2 and above!
+; --- Global Settings
+; layer_height = {layer_height}
+; smooth_spiralized_contours = {smooth_spiralized_contours}
+; magic_mesh_surface_mode = {magic_mesh_surface_mode}
+; machine_extruder_count = {machine_extruder_count}
+; --- Single Extruder Settings
+; speed_z_hop = {speed_z_hop}
+; retraction_amount = {retraction_amount}
+; retraction_hop = {retraction_hop}
+; retraction_hop_enabled = {retraction_hop_enabled}
+; retraction_enable = {retraction_enable}
+; retraction_speed = {retraction_speed}
+; retraction_retract_speed = {retraction_retract_speed}
+; retraction_prime_speed = {retraction_prime_speed}
+; speed_travel = {speed_travel}
+
+
+; Preheat bed and nozzle
+; Attention: I am using CURA´s keywords
+
+; Set bed and nozzle printing temperatures
+M104 S{material_print_temperature_layer_0} ; set extruder temp
+M140 S{material_bed_temperature_layer_0} ; set bed temp
+
+; Home axes and load the bed mesh (if any)
+G28 ; home all axes
+M420 S1 ; just in case enable bed mesh
+; G29 ; autolevel is disabled
+
+; Waiting for the bed and nozzle to warm to the defined temperatures
+M190 S{material_bed_temperature_layer_0} ; wait for bed temp
+M109 S{material_print_temperature_layer_0} ; wait for extruder temp
+
+; Prime nozzle
+G92 E0.0 ; reset extruder position
+G1 Y-5 ; go to front edge of the bed
+G1 Z0.2 ; lower the nozzle
+G1 E5 F200 ; extrude some filament
+
+; Print priming line
+G92 E0.0 ; reset extruder position
+G1 X60.0 E9.0 F1000 ; thick intro line
+G1 X140.0 E12.5.0 F1000 ; thin intro line
+
+; retract 3 mm and wipe the nozzle
+M106 ; Turns on fan to full speed
+G92 E0
+G1 X200 E-3 F1000 
+G92 E0.0 ; reset extruder position
+
+; Raise nozzle and start print
+G1 Z10 F5000
+
+
+;-----------------------------------
+;End G-code
+;-----------------------------------
+;Retract the filament 3 mm
+
+G92 E0 ; set current extruder position to 0
+G1 E-3 F2400 ; retract 3 mm of filament
+
+; Move nozzle up
+G91 ; change to relative position
+G1 Z5 ; Move Z axis 5 mm up from current position
+G90 ; turn back to absolute position
+
+; Turn off bed and nozzle temperatures
+M104 S0
+M140 S0
+
+; Home X and present print
+G1 X0 Y220 F5000 
+
+; Disable stepper motors
+M84
