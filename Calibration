@@ -1,0 +1,85 @@
+3D Printer calibration
+
+PID Auto tune extruder:
+
+Execute:
+M303 E0 S200 U1
+
+My results:
+SENDING:M303 E0 S200 U1
+PID Autotune start
+ bias: 93 d: 93 min: 196.27 max: 207.39
+ bias: 92 d: 92 min: 196.13 max: 204.58
+ bias: 90 d: 90 min: 196.66 max: 204.33 Ku: 29.88 Tu: 29.79
+ Classic PID
+ Kp: 17.93 Ki: 1.20 Kd: 66.77
+ bias: 90 d: 90 min: 196.71 max: 204.15 Ku: 30.80 Tu: 29.65
+ Classic PID
+ Kp: 18.48 Ki: 1.25 Kd: 68.50
+ bias: 89 d: 89 min: 196.84 max: 204.02 Ku: 31.58 Tu: 29.17
+ Classic PID
+ Kp: 18.95 Ki: 1.30 Kd: 69.09
+PID Autotune finished! Put the last Kp, Ki and Kd constants from below into Configuration.h
+#define DEFAULT_Kp 18.95
+#define DEFAULT_Ki 1.30
+#define DEFAULT_Kd 69.09
+
+Now load the values to the memory
+M301 P18.95 I1.30 D69.09
+
+Save it to EEPROM
+M500
+
+Verify it has been loaded and saved:
+M503
+
+
+M500
+
+PID Auto tune bed:
+
+Execute:
+M303 E-1 S60 C8
+
+Meaning
+E-1 → heated bed
+S60 → target temp (PLA)
+C8 → 8 heating cycles (good accuracy)
+
+My results:
+SENDING:M303 E-1 S60 C8
+PID Autotune start
+ bias: 70 d: 70 min: 59.73 max: 60.54
+ bias: 63 d: 63 min: 59.82 max: 60.17 Ku: 450.76 Tu: 22.03
+ No overshoot
+ Kp: 90.15 Ki: 8.19 Kd: 661.96
+ bias: 61 d: 61 min: 59.82 max: 60.21 Ku: 404.40 Tu: 21.70
+ No overshoot
+ Kp: 80.88 Ki: 7.46 Kd: 584.92
+ bias: 60 d: 60 min: 59.81 max: 60.17 Ku: 421.59 Tu: 21.97
+ No overshoot
+ Kp: 84.32 Ki: 7.67 Kd: 617.57
+ bias: 59 d: 59 min: 59.84 max: 60.17 Ku: 454.47 Tu: 22.20
+ No overshoot
+ Kp: 90.89 Ki: 8.19 Kd: 672.47
+ bias: 60 d: 60 min: 59.84 max: 60.13 Ku: 516.42 Tu: 20.54
+ No overshoot
+ Kp: 103.28 Ki: 10.06 Kd: 707.21
+ bias: 57 d: 57 min: 59.83 max: 60.15 Ku: 453.97 Tu: 21.91
+ No overshoot
+ Kp: 90.79 Ki: 8.29 Kd: 663.10
+PID Autotune finished! Put the last Kp, Ki and Kd constants from below into Configuration.h
+#define DEFAULT_bedKp 90.79
+#define DEFAULT_bedKi 8.29
+#define DEFAULT_bedKd 663.10
+
+Load bed values:
+M304 P90.79 I8.29 D663.10
+
+Save them to EEPROM:
+M500
+
+Verify:
+M503
+
+
